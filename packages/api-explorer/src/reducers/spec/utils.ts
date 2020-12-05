@@ -100,15 +100,15 @@ export const fetchSpec = (key: string, specs: SpecItems): SpecState => {
   if (selectedSpec.api) {
     spec = { ...selectedSpec, key } as SpecState
   } else if (selectedSpec.specContent) {
-    // TODO: maybe discard specContent if specURL is present?
+    // TODO: maybe discard specContent if url is present?
     spec = {
       ...selectedSpec,
       key,
       api: parseSpec(selectedSpec.specContent),
     }
-  } else if (selectedSpec.specURL) {
+  } else if (selectedSpec.url) {
     // TODO: add fetch
-    // const content = await fetch(spec.specURL)
+    // const content = await fetch(spec.url)
     // spec.api = parseSpec(await content.text())
     // return spec
   } else {

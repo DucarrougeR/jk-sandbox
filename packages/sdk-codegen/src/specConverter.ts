@@ -49,50 +49,6 @@ export interface MimeFormats {
 }
 
 /**
- * Looker spec version item
- */
-export interface ISpecItem {
-  /** Abbreviated version of the API */
-  version: string
-  /** Semantic version of the API */
-  full_version: string
-  /** Usually legacy, stable, experimental, current */
-  status: string
-  /** Link to the swagger specification */
-  swagger_url: string
-}
-
-/**
- * Payload returned by the Looker /versions endpoint
- */
-export interface ILookerVersions {
-  /** This Looker version */
-  looker_release_version: string
-  /** The current/default API version */
-  current_version: ISpecItem
-  /** All API versions */
-  supported_versions: ISpecItem[]
-}
-
-/**
- * Api Specification with on-demand determination of values
- */
-export interface IApiSpecLink {
-  /** Name of the specification */
-  name: string
-  /** API version */
-  version: string
-  /** API version status */
-  status: string
-  /** Location of the specification */
-  url: string
-  /** Parsed content. Will be loaded on demand but is assigned to an empty object by default. */
-  api: IApiModel
-}
-
-export type SpecLinks = IApiSpecLink[]
-
-/**
  * Defaults the mime formats for producing and consuming
  */
 export const defaultMimeFormats: MimeFormats = {
@@ -502,6 +458,52 @@ export const upgradeSpec = (spec: string | object) => {
 }
 
 /**
+ * Looker spec version item
+ */
+export interface ISpecItem {
+  /** Abbreviated version of the API */
+  version: string
+  /** Semantic version of the API */
+  full_version: string
+  /** Usually legacy, stable, experimental, current */
+  status: string
+  /** Link to the swagger specification */
+  swagger_url: string
+}
+
+/**
+ * Payload returned by the Looker /versions endpoint
+ */
+export interface ILookerVersions {
+  /** This Looker version */
+  looker_release_version: string
+  /** The current/default API version */
+  current_version: ISpecItem
+  /** All API versions */
+  supported_versions: ISpecItem[]
+}
+
+/**
+ * Api Specification with on-demand determination of values
+ */
+export interface IApiSpecLink {
+  /** Name of the specification */
+  name: string
+  /** Is this the default specification to show? */
+  isDefault: boolean
+  /** API version */
+  version: string
+  /** API version status */
+  status: string
+  /** Location of the specification */
+  url: string
+  /** Parsed content. Will be loaded on demand but is assigned to an empty object by default. */
+  api: IApiModel
+}
+
+export type SpecLinks = IApiSpecLink[]
+
+/**
  * Fetches Looker specs from the API server url
  * @param sdk APIMethods implementation that supports authenticating a request
  * @param apiServerUrl base url of the API server. Typically something like https://my.looker.com:19999
@@ -522,13 +524,15 @@ export const getSpecLinks = (
   include = (spec: ISpecItem) => spec.version > '2.99'
 ) => {
   const prefix = `Release ${versions.looker_release_version} API `
+  const current = 'current'
   const deriveSpec = (spec: ISpecItem): IApiSpecLink => {
     const status =
       spec.swagger_url === versions.current_version.swagger_url
-        ? 'current'
+        ? current
         : spec.status
     return {
       name: `${prefix}${spec.version}`,
+      isDefault: status === current,
       version: spec.version,
       status,
       url: spec.swagger_url,

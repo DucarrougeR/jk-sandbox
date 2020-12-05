@@ -460,6 +460,7 @@ describe('spec conversion', () => {
       })
       const current = actual.find((s) => s.status === 'current')
       expect(current).toBeDefined()
+      expect(current!.isDefault).toEqual(true)
       actual.forEach((spec) => expect(isEmpty(spec.api)).toEqual(true))
     })
 

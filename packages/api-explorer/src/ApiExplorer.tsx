@@ -32,7 +32,7 @@ import {
   Layout,
   Page,
 } from '@looker/components'
-import { ApiModel, KeyedCollection } from '@looker/sdk-codegen'
+import { ISpecItem, KeyedCollection } from '@looker/sdk-codegen'
 import { Looker40SDK, Looker31SDK } from '@looker/sdk/lib/browser'
 import { useLocation } from 'react-router'
 
@@ -47,15 +47,15 @@ import {
 } from './reducers'
 import { AppRouter } from './routes'
 
-export interface SpecItem {
-  status: 'current' | 'deprecated' | 'experimental' | 'stable'
-  isDefault?: boolean
-  api?: ApiModel
-  specURL?: string
-  specContent?: string
-}
+// export interface SpecItem {
+//   status: 'current' | 'deprecated' | 'experimental' | 'stable'
+//   isDefault?: boolean
+//   api?: ApiModel
+//   url?: string
+//   specContent?: string
+// }
 
-export type SpecItems = KeyedCollection<SpecItem>
+export type SpecItems = KeyedCollection<ISpecItem>
 
 export interface ApiExplorerProps {
   specs: SpecItems
